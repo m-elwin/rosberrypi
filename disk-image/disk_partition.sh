@@ -9,6 +9,7 @@ The disk image will have:
 An MBR partition table.
 A 268MB fat32 boot partition (starting 1MB into the disk).
 The rest of the disk is for the system partition.
+
 "
 
 if [ $# != "2" ]; then

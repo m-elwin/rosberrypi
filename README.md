@@ -10,8 +10,7 @@ The host system needs `qemu-user-static-binfmt` to run arm64 binaries, and docke
 Ubuntu: `apt install qemu-user-static binfmt-support docker.io`
 Arch Linux: `pacman -S qemu-user-static-binfmt docker`
 
-# Docker Images
-## rosberrypi-ros
+# rosberrypi-ros
 1. A multi-stage docker container that sets up the Linux system to be used on the raspberry Pi
 2. It can be built from the rosberrypi-ros directory with `docker build --target <target> . -t <tag>`
    - `<target>` is the layer in the multi-stage build used for the image, allowing intermediate steps to be used
@@ -22,3 +21,7 @@ From top-to-bottom, the possible values for `<target>` are:
 - `rosberrypi-ros`  - A Full ROS 2 installation (in the future we may have a minimal ROS 2 installation as a target as well).
 - `rosberrypi-base` - A minimal Ubuntu image from debootstrap
 - `rosberrypi-bootstrap` - Ubuntu has been bootstrapped into a sub-directory
+
+
+# disk-image
+The scripts and containers here are used to create and write the SD Card image.
