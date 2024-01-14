@@ -36,7 +36,7 @@ RUN add-apt-repository universe restricted multiverse
 
 
 # The next layer does a full ROS 2 install
-FROM rosberrypi-base AS rosberrypi-ros-full
+FROM rosberrypi-base AS rosberrypi-ros
 RUN apt-get update && \
     apt-get install curl -yq
 
