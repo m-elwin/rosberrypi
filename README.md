@@ -12,9 +12,8 @@
    - `<target>` (optional): which base docker image to create
       - `rosberrypi-ros`  (default) A Full ROS 2 installation.
       - `rosberrypi-base` A minimal Ubuntu image from debootstrap.
-
 # Writing an Image
-1. `./create_disk <docker_img> <file>`
+1. `./create_disk_image.sh <docker_img> <file>`
    - Creates a bootable raspberry pi disk image from `<docker_img>` and writes it to `<file>`
    - This works with any compatible docker image. Compatible images can be built by extending
      one of the built-in images
