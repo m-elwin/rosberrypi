@@ -4,6 +4,8 @@ FROM ubuntu:jammy
 RUN apt-get update \
     && apt-get install -yq \
     curl \
+    dosfstools \
+    udev \
     parted
 
 
@@ -14,9 +16,5 @@ RUN curl -L "https://github.com/raspberrypi/firmware/archive/refs/tags/1.2023040
     && mv firmware-1.20230405 firmware
 
 COPY --chmod=755 disk_setup.sh /disk_setup.sh
-
-# The disk volume is where the raspi image filesystem tarball is placed
-# And it is where the output disk image is placed
-VOLUME ["/disk"]
 
 ENTRYPOINT ["/disk_setup.sh"]
