@@ -61,7 +61,38 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/r
 RUN apt-get update && \
     apt-get install -yq \
     ros-dev-tools \
-    ros-iron-ros-base
+    ros-iron-ros-desktop-full
 
 RUN apt-get purge unattended-upgrades
-# The next layer is for the turtlebot3
+
+# Setup turtlebot 3
+# Follow advanced instructions from
+# https://emanual.robotis.com/docs/en/platform/turtlebot3/sbc_setup/#sbc-setup
+FROM rosberrypi-ros as rosberrypi-turtlebot3
+
+RUN systemctl mask \
+              hibernate.target \
+              hybrid-sleep.target \
+              sleep.target \
+              suspend.target \
+              systemd-networkd-wait-online.service
+
+RUN apt-get update \
+    && apt-get install -yq \
+       network-manager \
+       ros-iron-hls-lfcd-lds-driver \
+       ros-iron-turtlebot3-msgs \
+       ros-iron-dynamixel-sdk
+
+RUN mkdir tbot_ws \
+    && cd tbot_ws \
+    && git clone -b humble-devel \
+       https://github.com/ROBOTIS-GIT/turtlebot3.git
+
+# RUN . /opt/ros/iron/setup.sh \
+#    && colcon build --packages-skip \
+#                      turtlebot3_cartographer \
+#                      turtlebot3_navigation2 \
+#                      --cmake-args=-DCMAKE_BUILD_TYPE=Release
+
+#RUN . /opt/ros/iron/setup.sh && cp $(ros2 pkg prefix turtlebot3_bringup)/share/turtlebot3_bringup/script/99-turtlebot3-cdc.rules /etc/udev/rules.d/

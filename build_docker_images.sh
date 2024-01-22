@@ -7,6 +7,7 @@ Build the rosberrypi docker images
 
 <target> - Build only the images up-to the named target
            allowing a more minimal image to be explicitly referred to and booted
+           defaults to the turtlebot3 target
 """
 set -e
 
@@ -14,7 +15,7 @@ if [ $# -gt "1" ]; then
     printf "$usage"
     exit 1
 elif [ $# = "0" ]; then
-    target=rosberrypi-ros
+    target=turtlebot3
 else
     target=$1
 fi
