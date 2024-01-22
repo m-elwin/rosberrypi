@@ -15,6 +15,7 @@ RUN curl -L "https://github.com/raspberrypi/firmware/archive/refs/tags/1.2023040
     && rm firmware-1.20230405.tar.gz \
     && mv firmware-1.20230405 firmware
 
+COPY config.txt cmdline.txt disk_setup.sh /
 COPY --chmod=755 disk_setup.sh /disk_setup.sh
 
 ENTRYPOINT ["/disk_setup.sh"]

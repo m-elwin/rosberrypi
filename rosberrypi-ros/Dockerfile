@@ -5,25 +5,38 @@
 
 # Get debootstrap and download minimal Ubuntu for arm64
 FROM ubuntu:jammy AS rosberrypi-bootstrap
+COPY flash-kernel.equivs /
 
 RUN apt-get update && \
-    apt-get install -yq debootstrap
+    apt-get install -yq \
+    debootstrap \
+    equivs
 
 RUN debootstrap --arch=arm64 \
                 --variant=minbase \
                 jammy \
                 /mnt \
                 http://ports.ubuntu.com/ubuntu-ports
+RUN equivs-build /flash-kernel.equivs \
+    && mv flash-kernel_99_all.deb /mnt
 
 # The next image is the most basic Ubuntu container
 # But with locale and basic repositories enabled
 FROM scratch AS rosberrypi-base
 COPY --from=rosberrypi-bootstrap /mnt /
 
+# Install fake flash kernel
+RUN dpkg -i /flash-kernel_99_all.deb && rm /flash-kernel_99_all.deb
+
 # Install some additional needed packages
 RUN apt-get update && \
     apt-get install -yq \
-    locales \
+    linux-image-raspi \
+    linux-headers-raspi \
+    locales
+
+RUN apt-get update && \
+    apt-get install -yq --no-install-recommends \
     software-properties-common
 
 # Generate and setup the locale
@@ -38,7 +51,8 @@ RUN add-apt-repository universe restricted multiverse
 # The next layer does a full ROS 2 install
 FROM rosberrypi-base AS rosberrypi-ros
 RUN apt-get update && \
-    apt-get install curl -yq
+    apt-get install -yq \
+            curl
 
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
@@ -47,6 +61,7 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/r
 RUN apt-get update && \
     apt-get install -yq \
     ros-dev-tools \
-    ros-iron-desktop
+    ros-iron-ros-base
 
+RUN apt-get purge unattended-upgrades
 # The next layer is for the turtlebot3

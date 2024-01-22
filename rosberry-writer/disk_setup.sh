@@ -44,8 +44,19 @@ mkdir /mnt/boot
 mount "${device}p1" /mnt/boot
 
 echo "Copying the root filesystem"
-# Copy the system filesystem to disk
-cp -ar /disk/raspi/* /mnt
+# Copy the system filesystem to disk.
+# It will fail to copy symlinks to /boot, ignore that error
+cp -far /disk/raspi/* /mnt || :
+
+# Get the linux version
+version=$(readlink /boot/vmlinuz | cut -c 9-)
+# adjust all boot files to versionless names
+mv /mnt/boot/initrd.img-$version /mnt/boot/initrd.img
+mv /mnt/boot/System.map-$version /mnt/boot/System.map
+mv /mnt/boot/vmlinuz-$version /mnt/boot/vmlinuz
+
+cp /cmdline.txt /mnt/boot/cmdline.txt
+cp /config.txt /mnt/boot/config.txt
 
 echo "Copying the firmware"
 # Copy the firmware to the boot partition
