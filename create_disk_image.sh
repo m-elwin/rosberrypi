@@ -1,22 +1,20 @@
 #!/bin/sh
 script_name=$0
 usage=\
-"Usage: $script_name <docker_img> <disk_file>
+"Usage: $script_name <docker_img>
 
-Build the rosberrypi docker images
+Build the rosberrypi disk image from a raspberry pi docker image
 
 <docker_img> - The name of the docker image we want to write to a raspi filesystem
-<file> - The name of the filesystem to store the filesystem in
 
 """
 set -e
 
-if [ $# != "2" ]; then
+if [ $# != "1" ]; then
     printf "$usage"
     exit 1
 fi
 docker_img=$1
-disk_file=$2
 
 # determine if we need to use sudo when calling docker
 if groups $USER | grep -q docker;
@@ -26,14 +24,25 @@ else
     DOCKER="sudo docker"
 fi
 
-# Create a temporary directory
-tempdir=$(mktemp -d /tmp/raspXXXXX)
+# We do all the steps inside docker containers
+# Data is shared using the raspi_disk volume
+# We try to do as few steps as possible in privileged containers
 
-# Create the first docker container so it can be exported
-container=$($DOCKER create $docker_img /bin/bash)
-$DOCKER export $container -o "$tempdir/raspi.tar"
+# Export the container to the volume (requires running docker inside docker)
+$DOCKER run -it --rm \
+        -v raspi_disk:/disk \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        rosberry-writer /10-export-container.sh $docker_img
 
-$DOCKER run -it --rm --privileged --mount type=bind,src=$tempdir,target=/disk --mount type=bind,src=/dev,target=/dev rosberry-writer
+# Create the image file (no special privileges needed)
+$DOCKER run -it --rm \
+        -v raspi_disk:/disk \
+        rosberry-writer /20-make-disk-file.sh
 
-cp "$tempdir/disk.img" $disk_file
-sudo rm -rf $tempdir
+# copying the files to the image must be privileged because
+# The image file needs to be mounted on loopback.
+$DOCKER run -it --rm --privileged \
+        -v raspi_disk:/disk \
+        --mount type=bind,src=/dev,target=/dev \
+        rosberry-writer /30-copy-fs.sh
+

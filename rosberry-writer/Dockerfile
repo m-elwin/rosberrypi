@@ -4,9 +4,12 @@ FROM ubuntu:jammy
 RUN apt-get update \
     && apt-get install -yq \
     curl \
+    docker.io \
     dosfstools \
+    fdisk \
     udev \
-    parted
+    parted \
+    pv
 
 
 # Get the raspberry pi firmware
@@ -15,7 +18,12 @@ RUN curl -L "https://github.com/raspberrypi/firmware/archive/refs/tags/1.2023040
     && rm firmware-1.20230405.tar.gz \
     && mv firmware-1.20230405 firmware
 
-COPY config.txt cmdline.txt disk_setup.sh /
-COPY --chmod=755 disk_setup.sh /disk_setup.sh
+VOLUME /disk
 
-ENTRYPOINT ["/disk_setup.sh"]
+COPY config.txt cmdline.txt /
+COPY --chmod=755 \
+     10-export-container.sh \
+     20-make-disk-file.sh \
+     30-copy-fs.sh \
+     40-write-to-sdcard.sh \
+     /

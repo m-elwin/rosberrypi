@@ -1,0 +1,6 @@
+Package: flash-kernel
+Version: 99:99
+Maintainer: None <mail@domain.com>
+Architecture: all
+Description: dummy flash kernel
+ A dummy package to prevent installation of flash kernel, which is not needed for this raspberry pi setup
