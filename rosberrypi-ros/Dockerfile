@@ -61,9 +61,10 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/r
 RUN apt-get update && \
     apt-get install -yq \
     ros-dev-tools \
-    ros-iron-ros-desktop-full
+    ros-iron-ros-desktop \
+    && apt-get purge unattended-upgrades
 
-RUN apt-get purge unattended-upgrades
+RUN rosdep init
 
 # Setup turtlebot 3
 # Follow advanced instructions from

@@ -15,7 +15,7 @@ if [ $# -gt "1" ]; then
     printf "$usage"
     exit 1
 elif [ $# = "0" ]; then
-    target=turtlebot3
+    target=rosberrypi-turtlebot3
 else
     target=$1
 fi
