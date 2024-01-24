@@ -61,7 +61,7 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/r
 RUN apt-get update && \
     apt-get install -yq \
     ros-dev-tools \
-    ros-iron-ros-desktop \
+    ros-iron-desktop \
     && apt-get purge unattended-upgrades
 
 RUN rosdep init
@@ -80,6 +80,7 @@ RUN systemctl mask \
 
 RUN apt-get update \
     && apt-get install -yq \
+       dh-make \
        network-manager \
        ros-iron-hls-lfcd-lds-driver \
        ros-iron-turtlebot3-msgs \
@@ -90,10 +91,33 @@ RUN mkdir tbot_ws \
     && git clone -b humble-devel \
        https://github.com/ROBOTIS-GIT/turtlebot3.git
 
-# RUN . /opt/ros/iron/setup.sh \
-#    && colcon build --packages-skip \
-#                      turtlebot3_cartographer \
-#                      turtlebot3_navigation2 \
-#                      --cmake-args=-DCMAKE_BUILD_TYPE=Release
+# TODO: put these at an earlier stage, call the file rosberry.yaml
+# Subsequent stages just append keys to this file
+# Custom configuration for numsr
+COPY etc /etc
 
-#RUN . /opt/ros/iron/setup.sh && cp $(ros2 pkg prefix turtlebot3_bringup)/share/turtlebot3_bringup/script/99-turtlebot3-cdc.rules /etc/udev/rules.d/
+# Setup rosdep rules and the ability to build ros debian packages
+RUN rosdep update && rosdep fix-permissions
+
+# TODO PUT EARLIER
+RUN apt-get install dh-python
+
+# generate turtlebot3 debian packages with bloom and install them
+RUN cd /tbot_ws/turtlebot3/turtlebot3_description \
+    && bloom-generate rosdebian --ros-distro iron \
+    && ./debian/rules binary \
+    && cd /tbot_ws/turtlebot3/turtlebot3_node \
+    && bloom-generate rosdebian --ros-distro iron \
+    && ./debian/rules binary \
+    && cd /tbot_ws/turtlebot3/turtlebot3_bringup \
+    && bloom-generate rosdebian --ros-distro iron \
+    && ./debian/rules binary \
+    && cd /tbot_ws/turtlebot3/turtlebot3_teleop \
+    && bloom-generate rosdebian --ros-distro iron \
+    && ./debian/rules binary \
+    && cd /tbot_ws \
+
+#&& apt-get install ./*.deb \
+#    && rm -rf /tbot_ws
+
+
