@@ -76,7 +76,7 @@ RUN rosdep init
 # Follow advanced instructions from
 # https://emanual.robotis.com/docs/en/platform/turtlebot3/sbc_setup/#sbc-setup
 FROM rosberrypi-ros as rosberrypi-turtlebot3
-
+COPY --from=opencr /nuburger.opencr /
 RUN systemctl mask \
               hibernate.target \
               hybrid-sleep.target \
@@ -117,5 +117,3 @@ RUN cd /turtlebot3/turtlebot3_description \
     && apt-get install ./*.deb \
     && cd / \
     && rm -rf /turtlebot3
-
-
