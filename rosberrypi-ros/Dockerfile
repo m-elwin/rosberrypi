@@ -13,6 +13,7 @@ RUN apt-get update && \
     equivs
 
 RUN debootstrap --arch=arm64 \
+                --foreign \
                 --variant=minbase \
                 jammy \
                 /mnt \
@@ -24,6 +25,9 @@ RUN equivs-build /flash-kernel.equivs \
 # But with locale and basic repositories enabled
 FROM scratch AS rosberrypi-base
 COPY --from=rosberrypi-bootstrap /mnt /
+
+# Debootstrap everything
+RUN /debootstrap/debootstrap --second-stage
 
 # Install fake flash kernel
 RUN dpkg -i /flash-kernel_99_all.deb && rm /flash-kernel_99_all.deb
@@ -52,7 +56,9 @@ RUN add-apt-repository universe restricted multiverse
 FROM rosberrypi-base AS rosberrypi-ros
 RUN apt-get update && \
     apt-get install -yq \
-            curl
+            curl \
+            dh-make \
+            dh-python
 
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
@@ -80,7 +86,6 @@ RUN systemctl mask \
 
 RUN apt-get update \
     && apt-get install -yq \
-       dh-make \
        network-manager \
        ros-iron-hls-lfcd-lds-driver \
        ros-iron-turtlebot3-msgs \
@@ -91,16 +96,11 @@ RUN mkdir tbot_ws \
     && git clone -b humble-devel \
        https://github.com/ROBOTIS-GIT/turtlebot3.git
 
-# TODO: put these at an earlier stage, call the file rosberry.yaml
-# Subsequent stages just append keys to this file
-# Custom configuration for numsr
-COPY etc /etc
+COPY turtlebot3_etc /etc
 
 # Setup rosdep rules and the ability to build ros debian packages
 RUN rosdep update && rosdep fix-permissions
 
-# TODO PUT EARLIER
-RUN apt-get install dh-python
 
 # generate turtlebot3 debian packages with bloom and install them
 RUN cd /tbot_ws/turtlebot3/turtlebot3_description \
@@ -115,7 +115,7 @@ RUN cd /tbot_ws/turtlebot3/turtlebot3_description \
     && cd /tbot_ws/turtlebot3/turtlebot3_teleop \
     && bloom-generate rosdebian --ros-distro iron \
     && ./debian/rules binary \
-    && cd /tbot_ws \
+    && cd /tbot_ws 
 
 #&& apt-get install ./*.deb \
 #    && rm -rf /tbot_ws
