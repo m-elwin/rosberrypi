@@ -91,9 +91,7 @@ RUN apt-get update \
        ros-iron-turtlebot3-msgs \
        ros-iron-dynamixel-sdk
 
-RUN mkdir tbot_ws \
-    && cd tbot_ws \
-    && git clone -b humble-devel \
+RUN git clone -b humble-devel \
        https://github.com/ROBOTIS-GIT/turtlebot3.git
 
 COPY turtlebot3_etc /etc
@@ -103,21 +101,21 @@ RUN rosdep update && rosdep fix-permissions
 
 
 # generate turtlebot3 debian packages with bloom and install them
-RUN cd /tbot_ws/turtlebot3/turtlebot3_description \
+RUN cd /turtlebot3/turtlebot3_description \
     && bloom-generate rosdebian --ros-distro iron \
     && ./debian/rules binary \
-    && cd /tbot_ws/turtlebot3/turtlebot3_node \
+    && cd /turtlebot3/turtlebot3_node \
     && bloom-generate rosdebian --ros-distro iron \
     && ./debian/rules binary \
-    && cd /tbot_ws/turtlebot3/turtlebot3_bringup \
+    && cd /turtlebot3/turtlebot3_bringup \
     && bloom-generate rosdebian --ros-distro iron \
     && ./debian/rules binary \
-    && cd /tbot_ws/turtlebot3/turtlebot3_teleop \
+    && cd /turtlebot3/turtlebot3_teleop \
     && bloom-generate rosdebian --ros-distro iron \
     && ./debian/rules binary \
-    && cd /tbot_ws 
-
-#&& apt-get install ./*.deb \
-#    && rm -rf /tbot_ws
+    && cd /turtlebot3 \
+    && apt-get install ./*.deb \
+    && cd / \
+    && rm -rf /turtlebot3
 
 
