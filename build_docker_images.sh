@@ -28,5 +28,6 @@ else
     DOCKER="sudo docker"
 fi
 
+$DOCKER build --tag numsr/opencr ./opencr
 $DOCKER build --target $target --tag $target ./rosberrypi-ros
 $DOCKER build --tag rosberry-writer ./rosberry-writer
