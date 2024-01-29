@@ -124,4 +124,4 @@ COPY --from=opencr \
      /usr/local/bin
 
 # TODO: move this earlier
-RUN apt-get update && apt-get install -yq openssh-server
+RUN apt-get update && apt-get install -yq openssh-server sed

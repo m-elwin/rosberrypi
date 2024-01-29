@@ -40,7 +40,7 @@ echo "Unmounting"
 umount /mnt/boot
 umount /mnt
 
-rm /disk/raspi
+rm -rf /disk/raspi
 
 # Delete the loop device
 losetup -d "${device}"
