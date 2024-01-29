@@ -1,0 +1,2 @@
+#!/bin/sh
+./opencr_ld_shell_arm64 /dev/ttyACM0 115200 nuburger.opencr 1

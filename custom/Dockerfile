@@ -8,7 +8,7 @@ ARG msr_ssid
 ARG msr_psk
 
 # Create the MSR user
-RUN useradd msr --create-home --shell /usr/bin/bash --groups adm,video \
+RUN useradd msr --create-home --shell /usr/bin/bash --groups adm,sudo,video \
     && echo "source /opt/ros/iron/setup.bash" >> /home/msr/.bashrc \
     && echo "msr:$msr_password" | chpasswd \
     && su -c "rosdep update" msr

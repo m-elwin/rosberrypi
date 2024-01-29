@@ -8,6 +8,7 @@ device=$(losetup --show -Pf /disk/disk.img)
 echo "Formatting the disk"
 mkfs.vfat "${device}p1"
 mkfs.ext4 -F "${device}p2"
+fatlabel "${device}p1" system-boot
 e2label "${device}p2" writable
 
 # Mount the disk

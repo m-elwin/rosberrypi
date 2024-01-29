@@ -34,3 +34,4 @@ $DOCKER build --tag rosberrypi-numsr \
         --build-arg="msr_ssid=$msr_ssid" \
         --build-arg="msr_psk=$msr_psk" \
         ./custom
+echo "Built rosberrypi-numsr Docker image"

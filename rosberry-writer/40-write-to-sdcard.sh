@@ -17,6 +17,13 @@ sdpart=$(fdisk -l $sdcard | tail -1 | awk '{print $1 }')
 echo "Mounting $sdpart"
 mount $sdpart /mnt
 echo $raspi_hostname > /mnt/etc/hostname
+cat <<EOF > /mnt/etc/hosts
+127.0.0.1 localhost
+::1       localhost
+127.0.0.1 ${raspi_hostname}.lan ${raspi_hostname}
+EOF
+rm /mnt/etc/resolv.conf
+ln -s /run/systemd/resolv.conf /mnt/etc/resolv.conf
 umount $sdpart
 echo "Resizing partition"
 parted $sdcard resizepart 2 100%

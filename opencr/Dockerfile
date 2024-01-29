@@ -31,3 +31,7 @@ RUN ln -s /OpenCR/arduino/opencr_release /arduino && \
 RUN arduino-cli --config-file /arduino-cli.yaml compile  --build-path /firmware \
                 --fqbn OpenCR:OpenCR:OpenCR arduino/packages/OpenCR/hardware/OpenCR/1.5.1/libraries/turtlebot3_ros2/examples/turtlebot3_burger/turtlebot3_burger.ino \
                 && /OpenCR/arduino/opencr_develop/opencr_ld_shell/opencr_ld_shell_x86 make /firmware/turtlebot3_burger.ino.bin nuburger NU-MSR
+
+# TODO: put this later
+RUN apt-get install -yq make
+RUN cd OpenCR/arduino/opencr_develop/opencr_ld_shell && make && cp opencr_ld_shell /opencr_ld_shell_arm64

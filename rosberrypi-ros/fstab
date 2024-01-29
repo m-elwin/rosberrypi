@@ -1,0 +1,2 @@
+LABEL=writable	/	ext4	discard,errors=remount-ro	0 1
+LABEL=system-boot       /boot/firmware  vfat    defaults        0       1

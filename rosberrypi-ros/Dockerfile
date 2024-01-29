@@ -120,8 +120,12 @@ RUN cd /turtlebot3/turtlebot3_description \
 
 COPY --from=opencr \
      /nuburger.opencr \
-     /OpenCR/arduino/opencr_develop/opencr_ld_shell/opencr_ld_shell_arm \
+     /opencr_ld_shell_arm64 \
      /usr/local/bin
 
+COPY --chmod=755 opencr_install_firmware /usr/local/bin
+
 # TODO: move this earlier
-RUN apt-get update && apt-get install -yq openssh-server sed
+RUN apt-get update && apt-get install -yq openssh-server
+COPY fstab /etc/fstab
+RUN cp /opt/ros/iron/share/turtlebot3_bringup/script/99-turtlebot3-cdc.rules /etc/udev/rules.d
