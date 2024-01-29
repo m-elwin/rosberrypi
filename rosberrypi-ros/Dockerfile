@@ -122,3 +122,6 @@ COPY --from=opencr \
      /nuburger.opencr \
      /OpenCR/arduino/opencr_develop/opencr_ld_shell/opencr_ld_shell_arm \
      /usr/local/bin
+
+# TODO: move this earlier
+RUN apt-get update && apt-get install -yq openssh-server
