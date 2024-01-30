@@ -1,0 +1,3 @@
+#!/bin/sh
+sudo docker buildx create --driver docker-container --name raspi_builder --buildkitd-flags '--allow-insecure-entitlement security.insecure' --use 
+sudo docker buildx build -t raspi_disk --allow security.insecure --load ../build/docker

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Mount the raspberry pi image
+# First, we need to manually create the loop partitions.
+# This is because if we let losetup do it, the changes
+# to /dev won't be reflected in the container
+loop_dev=$(losetup -f)
+mknod ${loop_dev}p1 b 259 4
+mknod ${loop_dev}p2 b 259 5
+
+# Mount the raspi image
+losetup --show -Pf /build/raspi.img
+
+# Resize the partitions
+e2fsck -y -f ${loop_dev}p2
+resize2fs ${loop_dev}p2
+
+# Mount the partitions
+mount ${loop_dev}p2 /
+
