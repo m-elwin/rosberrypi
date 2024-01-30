@@ -18,6 +18,7 @@ RUN debootstrap --arch=arm64 \
                 jammy \
                 /mnt \
                 http://ports.ubuntu.com/ubuntu-ports
+
 RUN equivs-build /flash-kernel.equivs \
     && mv flash-kernel_99_all.deb /mnt
 
@@ -51,6 +52,8 @@ ENV LANG=en_US.UTF-8
 # Add additional repositories
 RUN add-apt-repository universe restricted multiverse
 
+# Fstab for the raspberry pi
+COPY fstab /etc/fstab
 
 # The next layer does a full ROS 2 install
 FROM rosberrypi-base AS rosberrypi-ros
@@ -58,7 +61,8 @@ RUN apt-get update && \
     apt-get install -yq \
             curl \
             dh-make \
-            dh-python
+            dh-python \
+            openssh-server
 
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
@@ -118,14 +122,10 @@ RUN cd /turtlebot3/turtlebot3_description \
     && cd / \
     && rm -rf /turtlebot3
 
+RUN cp /opt/ros/iron/share/turtlebot3_bringup/script/99-turtlebot3-cdc.rules /etc/udev/rules.d
+
 COPY --from=opencr \
+     /opencr_install_firmware \
      /nuburger.opencr \
      /opencr_ld_shell_arm64 \
      /usr/local/bin
-
-COPY --chmod=755 opencr_install_firmware /usr/local/bin
-
-# TODO: move this earlier
-RUN apt-get update && apt-get install -yq openssh-server
-COPY fstab /etc/fstab
-RUN cp /opt/ros/iron/share/turtlebot3_bringup/script/99-turtlebot3-cdc.rules /etc/udev/rules.d

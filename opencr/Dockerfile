@@ -18,8 +18,7 @@ RUN curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/inst
 # Install the OpenCR board files
 COPY arduino-cli.yaml /arduino-cli.yaml
 
-RUN ln -s /OpenCR/arduino/opencr_release /arduino && \
-    arduino-cli --config-file /arduino-cli.yaml core install OpenCR:OpenCR -v && \
+RUN arduino-cli --config-file /arduino-cli.yaml core install OpenCR:OpenCR -v && \
     arduino-cli --config-file /arduino-cli.yaml core update-index && \
     arduino-cli --config-file /arduino-cli.yaml lib update-index && \
     arduino-cli --config-file /arduino-cli.yaml lib install Dynamixel2Arduino
@@ -29,9 +28,17 @@ RUN ln -s /OpenCR/arduino/opencr_release /arduino && \
 # The opencr_ld_shell converts the bin file to a form that can be loaded onto the OpenCR board
 # The output is /nuburger.opencr
 RUN arduino-cli --config-file /arduino-cli.yaml compile  --build-path /firmware \
-                --fqbn OpenCR:OpenCR:OpenCR arduino/packages/OpenCR/hardware/OpenCR/1.5.1/libraries/turtlebot3_ros2/examples/turtlebot3_burger/turtlebot3_burger.ino \
+                --fqbn OpenCR:OpenCR:OpenCR \
+                --library /OpenCR/arduino/opencr_arduino/opencr/libraries/turtlebot3_ros2 \
+                /OpenCR/arduino/opencr_arduino/opencr/libraries/turtlebot3_ros2/examples/turtlebot3_burger/turtlebot3_burger.ino \
                 && /OpenCR/arduino/opencr_develop/opencr_ld_shell/opencr_ld_shell_x86 make /firmware/turtlebot3_burger.ino.bin nuburger NU-MSR
 
-# TODO: put this later
-RUN apt-get install -yq make
-RUN cd OpenCR/arduino/opencr_develop/opencr_ld_shell && make && cp opencr_ld_shell /opencr_ld_shell_arm64
+RUN apt-get update && apt-get install -yq gcc-aarch64-linux-gnu
+
+# Cross-compile the Opencr shell for arm64. This is the tool that is used to load firmware onto the opencr board
+RUN cd /OpenCR/arduino/opencr_develop/opencr_ld_shell \
+    && aarch64-linux-gnu-gcc -o opencr_ld_shell_arm64 main.c opencr_ld.c serial_posix.c ./msg/msg.c \
+    && mv opencr_ld_shell_arm64 /
+
+
+COPY --chmod=755 opencr_install_firmware /
