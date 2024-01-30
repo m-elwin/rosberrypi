@@ -129,3 +129,21 @@ COPY --from=opencr \
      /nuburger.opencr \
      /opencr_ld_shell_arm64 \
      /usr/local/bin
+
+RUN git clone https://github.com/ME495-Navigation/nuturtlebot_msgs \
+    && cd nuturtlebot_msgs \
+    && bloom-generate rosdebian --ros-distro iron \
+    && ./debian/rules binary
+    && apt-get install ../*.deb \
+    && rm ../*.deb \
+    && cd .. \
+    && rm -rf nuturtlebot_msgs
+
+RUN git clone https://github.com/NU-MSR/numsr_turtlebot \
+    && cd numsr_turtlebot \
+    && bloom-generate rosdebian --ros-distro iron \
+    && ./debian/rules binary \
+    && apt-get install ../*.deb \
+    && rm ../*.deb \
+    && cd .. \
+    && rm -rf numsr_turtlebot

@@ -7,3 +7,5 @@ turtlebot3_node:
     ubuntu: [ros-iron-turtlebot3-node]
 turtlebot3_teleop:
     ubuntu: [ros-iron-turtlebot3-teleop]
+nuturtlebot_msgs:
+    ubuntu: [ros-iron-nuturtlebot-msgs]
