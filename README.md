@@ -4,6 +4,8 @@
 3. The primary example is a disk image suitable for use on the Turtlebot3 and a docker environment that enables cross-compilation.
 4. In the latest example ROS 2 Iron and Ubuntu 22.04 is used.
 
+# Cross-compiling environment
+
 # Setup
 1. Install `docker` and `qemu-user-static-binfmt`
    - Ubuntu: `apt install qemu-user-static binfmt-support docker.io`
@@ -15,6 +17,7 @@
       - `rosberrypi-base` A minimal Ubuntu image from debootstrap.
 3. Images can be built on top of the `rosberrypi-turtlebot3`.
    - `numsr_image.sh` will build a custom (example) image `rosberrypi-numsr` that sets up an msr user and connects to a wifi network
+
 # Writing an Image
 1. `./create_disk_image.sh <docker_img> <file>`
    - Creates a bootable raspberry pi disk image from `<docker_img>` and writes it to `<file>`

@@ -1,7 +1,18 @@
+FROM ubuntu:jammy AS ubuntu_amd64
+# Get a list of of all recursive dependencies from a working ubuntu system of the
+# amd64 utlities that we need to replace
+RUN apt-get update \
+    && apt-get install -yq \
+    apt-rdepends \
+    && apt-rdepends \
+              gcc-aarch64-linux-gnu g++-aarch64-linux-gnu\
+              python3 lsb-release perm passwd coreutils bash dash gawk grep sed findutils | grep -v "^ "\
+              | grep -v "^awk$" | grep -v "debconf-2.0" | grep -v dpkg > /dependencies.txt
+
 FROM rosberrypi-turtlebot3
 
 COPY sources.list /etc/apt/sources.list
-COPY dependencies.txt /dependencies.txt
+COPY --from=ubuntu_amd64 /dependencies.txt /dependencies.txt
 
 
 RUN dpkg --add-architecture amd64 && apt-get update
@@ -17,7 +28,12 @@ RUN apt-get purge -yq \
     apt-get -yq autoremove
 
 # install amd64 packages that install smoothly
-RUN apt-get install -yq cmake:amd64 libapt-pkg6.0:amd64 libseccomp2:amd64 libsystemd0:amd64 cmake:amd64
+RUN apt-get install -yq \
+            cmake:amd64 \
+            libapt-pkg6.0:amd64 \
+            libseccomp2:amd64 \
+            libsystemd0:amd64 \
+            make:amd64
 
 # Download amd64 apt, and remove arm64 apt, then install amd64 apt
 # amd64 apt runs faster but it also by default downloads amd64 packages
@@ -29,17 +45,11 @@ RUN apt-get download apt:amd64 && \
     rm ./*.deb
 
 
-# Manually download and install all the x86 packages we need while ignoring dependencies.
+# Manually download and install all the amd64 packages we need while ignoring dependencies.
 # The binaries will overwrite the arm binaries but the
 # amd64 and armhf libraries will remain installed side by side
 # Ideally, all uses of the docker container after this point
 # including during the build process, will not require qemu-arm-static
-
-# A list of all recursive dependencies generated running the command on a working Ubuntu system
-# apt-rdepends \
-#              gcc-aarch64-linux-gnu g++-aarch64-linux-gnu\
-#              python3 lsb-release perm passwd coreutils bash dash gawk grep sed findutils make | grep -v "^ "\
-#              | grep -v "^awk$" | grep -v "debconf-2.0" | grep -v dpkg > dependencies.txt
 RUN apt-get download $(xargs -a dependencies.txt)
 RUN apt-get download dpkg && dpkg -i --force-all *.deb && rm *.deb \
     && for pkg in *.deb; do dpkg -i --force-all $pkg && rm $pkg; done
