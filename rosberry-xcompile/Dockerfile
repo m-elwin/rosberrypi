@@ -1,6 +1,7 @@
 FROM ubuntu:jammy AS ubuntu_amd64
 # Get a list of of all recursive dependencies from a working ubuntu system of the
 # amd64 utlities that we need to replace
+# The grep -v removes some malformed dependencies
 RUN apt-get update \
     && apt-get install -yq \
     apt-rdepends \
@@ -28,7 +29,8 @@ RUN apt-get purge -yq \
     apt-get -yq autoremove
 
 # install amd64 packages that install smoothly
-RUN apt-get install -yq \
+RUN apt-get update \
+    && apt-get install -yq \
             cmake:amd64 \
             libapt-pkg6.0:amd64 \
             libseccomp2:amd64 \
@@ -50,9 +52,11 @@ RUN apt-get download apt:amd64 && \
 # amd64 and armhf libraries will remain installed side by side
 # Ideally, all uses of the docker container after this point
 # including during the build process, will not require qemu-arm-static
-RUN apt-get download $(xargs -a dependencies.txt)
-RUN apt-get download dpkg && dpkg -i --force-all *.deb && rm *.deb \
-    && for pkg in *.deb; do dpkg -i --force-all $pkg && rm $pkg; done
+RUN apt-get update && apt-get download $(xargs -a dependencies.txt)
+RUN dpkg -i --force-all *.deb
+
+#RUN apt-get download dpkg && dpkg -i --force-all *.deb && rm *.deb \
+#    && for pkg in *.deb; do dpkg -i --force-all $pkg && rm $pkg; done
 
 # We now have most of our build tools running native
 # Bring in the cmake toolchain file
