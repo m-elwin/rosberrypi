@@ -66,7 +66,8 @@ RUN apt-get update && \
             dh-make \
             dh-python \
             libarmadillo-dev \
-            openssh-server
+            openssh-server \
+            rsync
 
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 

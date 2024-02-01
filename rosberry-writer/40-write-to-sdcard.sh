@@ -23,7 +23,7 @@ cat <<EOF > /mnt/etc/hosts
 127.0.0.1 ${raspi_hostname}.lan ${raspi_hostname}
 EOF
 rm /mnt/etc/resolv.conf
-ln -s /run/systemd/resolv.conf /mnt/etc/resolv.conf
+ln -s /run/systemd/resolve/stub-resolv.conf /mnt/etc/resolv.conf
 umount $sdpart
 echo "Resizing partition"
 parted $sdcard resizepart 2 100%
