@@ -38,3 +38,7 @@
    - Writes the `<disk_file>` (the disk iamge) to the sdcard at `<sdcard>`.
    - The `<hostname>` will be the hostname of the machine
    - The system partition will be expanded to fit the whole card
+
+# OpenCR firmware
+1. The opencr firmware is built in the `opencr/` docker container
+2. On the turtlebot, with the OpenCR board plugged in, running `opencr_install_firmware` will install the firmware on the OpenCR board
