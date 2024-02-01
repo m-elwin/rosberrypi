@@ -16,8 +16,6 @@ COPY sources.list /etc/apt/sources.list
 COPY --from=ubuntu_amd64 /dependencies.txt /dependencies.txt
 
 
-RUN dpkg --add-architecture amd64 && apt-get update
-
 # Remove packages that aren't useful for cross-compiling
 # And that can cause problems since there is no kernel
 RUN apt-get purge -yq \
@@ -29,13 +27,14 @@ RUN apt-get purge -yq \
     apt-get -yq autoremove
 
 # install amd64 packages that install smoothly
-RUN apt-get update \
+RUN dpkg --add-architecture amd64 \
+    && apt-get update \
     && apt-get install -yq \
-            cmake:amd64 \
-            libapt-pkg6.0:amd64 \
-            libseccomp2:amd64 \
-            libsystemd0:amd64 \
-            make:amd64
+           cmake:amd64 \
+           libapt-pkg6.0:amd64 \
+           libseccomp2:amd64 \
+           libsystemd0:amd64 \
+           make:amd64
 
 # Download amd64 apt, and remove arm64 apt, then install amd64 apt
 # amd64 apt runs faster but it also by default downloads amd64 packages
@@ -53,10 +52,7 @@ RUN apt-get download apt:amd64 && \
 # Ideally, all uses of the docker container after this point
 # including during the build process, will not require qemu-arm-static
 RUN apt-get update && apt-get download $(xargs -a dependencies.txt)
-RUN dpkg -i --force-all *.deb
-
-#RUN apt-get download dpkg && dpkg -i --force-all *.deb && rm *.deb \
-#    && for pkg in *.deb; do dpkg -i --force-all $pkg && rm $pkg; done
+RUN dpkg --unpack --force-all *.deb
 
 # We now have most of our build tools running native
 # Bring in the cmake toolchain file
@@ -66,8 +62,6 @@ VOLUME /ros_ws
 
 COPY colcon_aarch64 /usr/bin/colcon_aarch64
 COPY aarch64 /aarch64
-RUN chmod 666 /etc/group /etc/passwd
-RUN chown -R msr:msr /home/msr
 WORKDIR /ros_ws
 
 # replace the container with the container id

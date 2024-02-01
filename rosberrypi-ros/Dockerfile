@@ -34,11 +34,14 @@ RUN /debootstrap/debootstrap --second-stage
 RUN dpkg -i /flash-kernel_99_all.deb && rm /flash-kernel_99_all.deb
 
 # Install some additional needed packages
-RUN apt-get update && \
-    apt-get install -yq \
-    linux-image-raspi \
-    linux-headers-raspi \
-    locales
+RUN apt-get update \
+    && apt-get upgrade -yq \
+    && apt-get install -yq \
+           iputils-ping \
+           linux-image-raspi \
+           linux-headers-raspi \
+           locales \
+           vim
 
 RUN apt-get update && \
     apt-get install -yq --no-install-recommends \
@@ -62,6 +65,7 @@ RUN apt-get update && \
             curl \
             dh-make \
             dh-python \
+            libarmadillo-dev \
             openssh-server
 
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg

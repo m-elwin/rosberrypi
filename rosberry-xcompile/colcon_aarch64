@@ -1,3 +1,4 @@
 #!/bin/sh
-. /opt/ros/humble/setup.sh
+# This is a convenience script to run colcon build in the docker container using the current workspace
+. /opt/ros/iron/setup.sh
 colcon build --build-base aarch64_build --install-base aarch64_install --cmake-args -DCMAKE_TOOLCHAIN_FILE=/toolchain.cmake -DCMAKE_INSTALL_PREFIX=aarch64_install $@
