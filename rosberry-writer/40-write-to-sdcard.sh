@@ -27,3 +27,5 @@ ln -s /run/systemd/resolve/stub-resolv.conf /mnt/etc/resolv.conf
 umount $sdpart
 echo "Resizing partition"
 parted $sdcard resizepart 2 100%
+e2fsck -f $sdpart
+resize2fs $sdpart
