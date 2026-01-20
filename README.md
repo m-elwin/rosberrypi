@@ -6,7 +6,7 @@
 4. In the latest example ROS 2 Kilted and Ubuntu 22.04 is used.
 
 # Cross-compiling
-1. Install docker: `sudo apt install docker.io docker-buildx`
+1. Install docker: `sudo apt install docker.io`
    - This step is done once per computer
 2. In the base of a ROS workspace you wish to cross compile run `docker run reem17/rosberrypi-xcompile:kilted > aarch64 && chmod 755 aarch64`
    - This step is done once per workspace
@@ -19,7 +19,7 @@
 0. These steps are for if you want to build or customize the Raspberrypi disk image or the cross compiling docker container.
    - *Most MSR students do not need to perform these steps!*
 1. Install `docker` and `qemu-user-static-binfmt`
-   - Ubuntu: `apt install qemu-user-static binfmt-support docker.io`
+   - Ubuntu: `apt install qemu-user-static binfmt-support docker.io docker-buildx`
    - Arch Linux: `pacman -S qemu-user-static-binfmt docker`
 2. Build the rosberrypi docker containers `./build_docker_images.sh [<target>]`
    - `<target>` (optional): which base docker image to create
