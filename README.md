@@ -8,7 +8,7 @@
 # Cross-compiling
 1. Install docker: `sudo apt install docker.io`
    - This step is done once per computer
-2. In the base of a ROS workspace you wish to cross compile run ~docker run reem17/rosberrypi-xcompile:iron > aarch64 && chmod 755 aarch64
+2. In the base of a ROS workspace you wish to cross compile run `docker run reem17/rosberrypi-xcompile:iron > aarch64 && chmod 755 aarch64`
    - This step is done once per workspace
 3. Compile your code with ./aarch64 colcon_aarch64
    - This step is done whenever you wish to cross compile
