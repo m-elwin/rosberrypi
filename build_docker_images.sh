@@ -31,4 +31,4 @@ fi
 $DOCKER build --tag opencr ./opencr
 $DOCKER build --target $target --tag $target ./rosberrypi-ros
 $DOCKER build --tag rosberry-writer ./rosberry-writer
-$DOCKER build --tag reem17/rosberrypi-xcompile:iron ./rosberry-xcompile
+$DOCKER build --tag reem17/rosberrypi-xcompile:kilted ./rosberry-xcompile

@@ -1,5 +1,5 @@
 # This dockerfile is for building the opencr firmware
-FROM ubuntu:jammy
+FROM ubuntu:noble
 
 RUN dpkg --add-architecture i386 && \
     apt-get update && \

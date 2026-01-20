@@ -4,7 +4,7 @@
 # syntax=docker/dockerfile:1
 
 # Get debootstrap and download minimal Ubuntu for arm64
-FROM ubuntu:jammy AS rosberrypi-bootstrap
+FROM ubuntu:noble AS rosberrypi-bootstrap
 COPY flash-kernel.equivs /
 
 RUN apt-get update && \
@@ -15,7 +15,7 @@ RUN apt-get update && \
 RUN debootstrap --arch=arm64 \
                 --foreign \
                 --variant=minbase \
-                jammy \
+                noble \
                 /mnt \
                 http://ports.ubuntu.com/ubuntu-ports
 
@@ -77,7 +77,7 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/r
 RUN apt-get update && \
     apt-get install -yq \
     ros-dev-tools \
-    ros-iron-desktop \
+    ros-kilted-desktop \
     && apt-get purge unattended-upgrades
 
 RUN rosdep init
@@ -97,11 +97,11 @@ RUN systemctl mask \
 RUN apt-get update \
     && apt-get install -yq \
        network-manager \
-       ros-iron-hls-lfcd-lds-driver \
-       ros-iron-turtlebot3-msgs \
-       ros-iron-dynamixel-sdk
+       ros-kilted-hls-lfcd-lds-driver \
+       ros-kilted-turtlebot3-msgs \
+       ros-kilted-dynamixel-sdk
 
-RUN git clone -b humble-devel \
+RUN git clone -b jazzy \
        https://github.com/ROBOTIS-GIT/turtlebot3.git
 
 COPY turtlebot3_etc /etc
@@ -112,23 +112,23 @@ RUN rosdep update && rosdep fix-permissions
 
 # generate turtlebot3 debian packages with bloom and install them
 RUN cd /turtlebot3/turtlebot3_description \
-    && bloom-generate rosdebian --ros-distro iron \
+    && bloom-generate rosdebian --ros-distro kilted \
     && ./debian/rules binary \
     && cd /turtlebot3/turtlebot3_node \
-    && bloom-generate rosdebian --ros-distro iron \
+    && bloom-generate rosdebian --ros-distro kilted \
     && ./debian/rules binary \
     && cd /turtlebot3/turtlebot3_bringup \
-    && bloom-generate rosdebian --ros-distro iron \
+    && bloom-generate rosdebian --ros-distro kilted \
     && ./debian/rules binary \
     && cd /turtlebot3/turtlebot3_teleop \
-    && bloom-generate rosdebian --ros-distro iron \
+    && bloom-generate rosdebian --ros-distro kilted \
     && ./debian/rules binary \
     && cd /turtlebot3 \
     && apt-get install ./*.deb \
     && cd / \
     && rm -rf /turtlebot3
 
-RUN cp /opt/ros/iron/share/turtlebot3_bringup/script/99-turtlebot3-cdc.rules /etc/udev/rules.d
+RUN cp /opt/ros/kilted/share/turtlebot3_bringup/script/99-turtlebot3-cdc.rules /etc/udev/rules.d
 
 COPY --from=opencr \
      /opencr_install_firmware \
@@ -138,7 +138,7 @@ COPY --from=opencr \
 
 RUN git clone https://github.com/NU-MSR/nuturtlebot_msgs \
     && cd nuturtlebot_msgs \
-    && bloom-generate rosdebian --ros-distro iron \
+    && bloom-generate rosdebian --ros-distro kilted \
     && ./debian/rules binary \
     && apt-get install ../*.deb \
     && rm ../*.deb \
@@ -147,7 +147,7 @@ RUN git clone https://github.com/NU-MSR/nuturtlebot_msgs \
 
 RUN git clone https://github.com/NU-MSR/numsr_turtlebot \
     && cd numsr_turtlebot \
-    && bloom-generate rosdebian --ros-distro iron \
+    && bloom-generate rosdebian --ros-distro kilted \
     && ./debian/rules binary \
     && apt-get install ../*.deb \
     && rm ../*.deb \

@@ -9,7 +9,7 @@ ARG msr_psk
 
 # Create the MSR user
 RUN useradd msr --create-home --shell /usr/bin/bash --groups adm,sudo,video \
-    && echo "source /opt/ros/iron/setup.bash" >> /home/msr/.bashrc \
+    && echo "source /opt/ros/kilted/setup.bash" >> /home/msr/.bashrc \
     && echo "export LDS_MODEL=LDS-01" >> /home/msr/.bashrc \
     && echo "msr:$msr_password" | chpasswd \
     && su -c "rosdep update" msr

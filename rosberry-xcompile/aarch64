@@ -9,5 +9,5 @@ then
 else
     DOCKER="sudo docker"
 fi
-$DOCKER run -it -u $(id -u):$(id -g) -v "$PWD":/ros_ws "reem17/rosberrypi-xcompile:iron" $@
+$DOCKER run -it -u $(id -u):$(id -g) -v "$PWD":/ros_ws "reem17/rosberrypi-xcompile:kilted" $@
 

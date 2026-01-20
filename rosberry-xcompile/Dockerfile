@@ -1,4 +1,4 @@
-FROM ubuntu:jammy AS ubuntu_amd64
+FROM ubuntu:noble AS ubuntu_amd64
 # Get a list of of all recursive dependencies from a working ubuntu system of the
 # amd64 utlities that we need to replace
 # The grep -v removes some malformed dependencies

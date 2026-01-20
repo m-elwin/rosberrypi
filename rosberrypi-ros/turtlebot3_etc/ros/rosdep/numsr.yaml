@@ -1,11 +1,11 @@
 # Has fake rosdep rules for packages that we bloom
 turtlebot3_description:
-    ubuntu: [ros-iron-turtlebot3-description]
+    ubuntu: [ros-kilted-turtlebot3-description]
 turtlebot3_bringup:
-    ubuntu: [ros-iron-turtlebot3-bringup]
+    ubuntu: [ros-kilted-turtlebot3-bringup]
 turtlebot3_node:
-    ubuntu: [ros-iron-turtlebot3-node]
+    ubuntu: [ros-kilted-turtlebot3-node]
 turtlebot3_teleop:
-    ubuntu: [ros-iron-turtlebot3-teleop]
+    ubuntu: [ros-kilted-turtlebot3-teleop]
 nuturtlebot_msgs:
-    ubuntu: [ros-iron-nuturtlebot-msgs]
+    ubuntu: [ros-kilted-nuturtlebot-msgs]

@@ -3,12 +3,12 @@
 2. Takes a minimal and layered approach: various intermediate steps can be used and customized.
 3. The primary example is a disk image suitable for use on the Turtlebot3 and a docker environment that enables cross-compilation.
 4. It includes slightly-modified Turtlebot3 OpenCR firmware that enables low-level access to the motors and encoders from ROS
-4. In the latest example ROS 2 Iron and Ubuntu 22.04 is used.
+4. In the latest example ROS 2 Kilted and Ubuntu 22.04 is used.
 
 # Cross-compiling
 1. Install docker: `sudo apt install docker.io`
    - This step is done once per computer
-2. In the base of a ROS workspace you wish to cross compile run `docker run reem17/rosberrypi-xcompile:iron > aarch64 && chmod 755 aarch64`
+2. In the base of a ROS workspace you wish to cross compile run `docker run reem17/rosberrypi-xcompile:kilted > aarch64 && chmod 755 aarch64`
    - This step is done once per workspace
 3. Compile your code with ./aarch64 colcon_aarch64
    - This step is done whenever you wish to cross compile

@@ -1,5 +1,5 @@
 # This image contains all the tools used to write the disk image
-FROM ubuntu:jammy
+FROM ubuntu:noble
 
 RUN apt-get update \
     && apt-get install -yq \
