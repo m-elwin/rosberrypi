@@ -153,3 +153,10 @@ RUN git clone https://github.com/NU-MSR/numsr_turtlebot \
     && rm ../*.deb \
     && cd .. \
     && rm -rf numsr_turtlebot
+
+# For Ubuntu Noble, and kilted we want a more up-dated GCC so we
+# Can use C++23
+RUN apt-get update && \
+    apt-get install -yq g++-14 gcc-14 \
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 \
+    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14

@@ -6,7 +6,7 @@
 4. In the latest example ROS 2 Kilted and Ubuntu 22.04 is used.
 
 # Cross-compiling
-1. Install docker: `sudo apt install docker.io`
+1. Install docker: `sudo apt install docker.io docker-buildx`
    - This step is done once per computer
 2. In the base of a ROS workspace you wish to cross compile run `docker run reem17/rosberrypi-xcompile:kilted > aarch64 && chmod 755 aarch64`
    - This step is done once per workspace
