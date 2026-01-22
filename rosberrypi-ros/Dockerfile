@@ -113,18 +113,18 @@ RUN rosdep update && rosdep fix-permissions
 # generate turtlebot3 debian packages with bloom and install them
 RUN cd /turtlebot3/turtlebot3_description \
     && bloom-generate rosdebian --ros-distro kilted \
-    && ./debian/rules binary \
-    && cd /turtlebot3/turtlebot3_node \
+    && ./debian/rules binary
+RUN cd /turtlebot3/turtlebot3_node \
     && bloom-generate rosdebian --ros-distro kilted \
-    && ./debian/rules binary \
-    && cd /turtlebot3/turtlebot3_bringup \
+    && ./debian/rules binary
+RUN cd /turtlebot3/turtlebot3_bringup \
     && bloom-generate rosdebian --ros-distro kilted \
-    && ./debian/rules binary \
-    && cd /turtlebot3/turtlebot3_teleop \
+    && ./debian/rules binary
+RUN cd /turtlebot3/turtlebot3_teleop \
     && bloom-generate rosdebian --ros-distro kilted \
-    && ./debian/rules binary \
-    && cd /turtlebot3 \
-    && apt-get install ./*.deb \
+    && ./debian/rules binary
+RUN cd /turtlebot3 \
+    && apt-get install -yq ./*.deb \
     && cd / \
     && rm -rf /turtlebot3
 
@@ -157,6 +157,6 @@ RUN git clone https://github.com/NU-MSR/numsr_turtlebot \
 # For Ubuntu Noble, and kilted we want a more up-dated GCC so we
 # Can use C++23
 RUN apt-get update && \
-    apt-get install -yq g++-14 gcc-14 \
-    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 \
-    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14
+    apt-get install -yq g++-14 gcc-14 && \
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100 && \
+    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100
