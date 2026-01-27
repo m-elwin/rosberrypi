@@ -6,9 +6,9 @@ RUN apt-get update \
     && apt-get install -yq \
     apt-rdepends \
     && apt-rdepends \
-              gcc-aarch64-linux-gnu g++-aarch64-linux-gnu\
+              gcc-14-aarch64-linux-gnu g++-14-aarch64-linux-gnu\
               python3 lsb-release perm passwd coreutils bash dash gawk grep sed findutils | grep -v "^ "\
-              | grep -v "^awk$" | grep -v "debconf-2.0" | grep -v dpkg > /dependencies.txt
+              | grep -v "^awk$" | grep -v "debconf-2.0" | grep -v dpkg | grep -v mime-support > /dependencies.txt
 
 FROM rosberrypi-turtlebot3
 
