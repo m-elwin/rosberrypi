@@ -10,7 +10,7 @@
    - This step is done once per computer
 2. In the base of a ROS workspace you wish to cross compile run `docker run reem17/rosberrypi-xcompile:kilted > aarch64 && chmod 755 aarch64`
    - This step is done once per workspace
-3. Compile your code with ./aarch64 colcon_aarch64
+3. Compile your code with `./aarch64 colcon_aarch64`
    - This step is done whenever you wish to cross compile
    - It invokes `colcon build` (plus any additional arguments you provide) inside the cross compiling environment
    - The resulting install space is `aarch64_install` and can be transferred to the remote platform to be used
