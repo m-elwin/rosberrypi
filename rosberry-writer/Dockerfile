@@ -13,10 +13,10 @@ RUN apt-get update \
 
 
 # Get the raspberry pi firmware
-RUN curl -L "https://github.com/raspberrypi/firmware/archive/refs/tags/1.20230405.tar.gz" > firmware-1.20230405.tar.gz \
-    && tar xf firmware-1.20230405.tar.gz \
-    && rm firmware-1.20230405.tar.gz \
-    && mv firmware-1.20230405 firmware
+RUN curl -L "https://github.com/raspberrypi/firmware/archive/refs/tags/1.20250915.tar.gz" > firmware.tar.gz \
+    && mkdir /firmware \
+    && tar xf firmware.tar.gz --strip-components=1 -C /firmware \
+    && rm firmware.tar.gz
 
 VOLUME /disk
 

@@ -34,7 +34,7 @@ cp /config.txt /mnt/boot/config.txt
 
 echo "Copying the firmware"
 # Copy the firmware to the boot partition
-cp -far firmware/boot/* /mnt/boot
+cp -far /firmware/boot/* /mnt/boot
 
 echo "Unmounting"
 # Unmount
