@@ -50,6 +50,8 @@ RUN dpkg --add-architecture amd64 \
            libapt-pkg6.0:amd64 \
            libseccomp2:amd64 \
            libsystemd0:amd64 \
+           libblas-dev:amd64 \
+           liblapack-dev:amd64 \
            make:amd64
 
 # Download amd64 apt, and remove arm64 apt, then install amd64 apt
