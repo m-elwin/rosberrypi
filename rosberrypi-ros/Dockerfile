@@ -78,7 +78,8 @@ RUN apt-get update && \
     apt-get install -yq \
     ros-dev-tools \
     ros-kilted-desktop \
-    && apt-get purge unattended-upgrades
+    && apt-get purge -yq unattended-upgrades \
+    && apt-get autoremove -yq
 
 RUN rosdep init
 
@@ -130,9 +131,13 @@ RUN cd /turtlebot3 \
 
 RUN cp /opt/ros/kilted/share/turtlebot3_bringup/script/99-turtlebot3-cdc.rules /etc/udev/rules.d
 
+COPY opencr_install_numsr_firmware \
+     opencr_install_robotis_firmware \
+     /usr/local/bin
+
 COPY --from=opencr \
-     /opencr_install_firmware \
      /nuburger.opencr \
+     /burger.opencr \
      /opencr_ld_shell_arm64 \
      /usr/local/bin
 

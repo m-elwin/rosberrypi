@@ -1,0 +1,4 @@
+#!/bin/sh
+# Convenience wrapper around opencr_ld_shell_arm64 designed
+# To always install the robotis firmware onto the opencr firmware
+opencr_ld_shell_arm64 /dev/ttyACM0 115200 /usr/local/bin/burger.opencr 1

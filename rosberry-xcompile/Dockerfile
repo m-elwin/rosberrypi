@@ -7,8 +7,9 @@ RUN apt-get update \
     apt-rdepends \
     && apt-rdepends \
               gcc-14-aarch64-linux-gnu g++-14-aarch64-linux-gnu\
-              python3 lsb-release perm passwd coreutils bash dash gawk grep sed findutils | grep -v "^ "\
-              | grep -v "^awk$" | grep -v "debconf-2.0" | grep -v dpkg | grep -v mime-support > /dependencies.txt
+              python3 python3-numpy lsb-release perm passwd coreutils bash dash gawk grep sed findutils | grep -v "^ "\
+              | grep -v "^awk$" | grep -v "debconf-2.0" | grep -v dpkg | grep -v mime-support \
+              | grep -v ".so.3" > /dependencies.txt
 
 FROM rosberrypi-turtlebot3
 
@@ -34,7 +35,9 @@ RUN dpkg --add-architecture amd64 \
            libapt-pkg6.0:amd64 \
            libseccomp2:amd64 \
            libsystemd0:amd64 \
-           make:amd64
+           make:amd64 \
+           libblas-dev:amd64 \
+           liblapack-dev:amd64
 
 # Download amd64 apt, and remove arm64 apt, then install amd64 apt
 # amd64 apt runs faster but it also by default downloads amd64 packages
@@ -53,6 +56,9 @@ RUN apt-get download apt:amd64 && \
 # including during the build process, will not require qemu-arm-static
 RUN apt-get update && apt-get download $(xargs -a dependencies.txt)
 RUN dpkg --unpack --force-all *.deb
+
+RUN update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-14 100 && \
+    update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-14 100
 
 # We now have most of our build tools running native
 # Bring in the cmake toolchain file
