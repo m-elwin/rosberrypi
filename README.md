@@ -41,4 +41,5 @@
 
 # OpenCR firmware
 1. The opencr firmware is built in the `opencr/` docker container
-2. On the turtlebot, with the OpenCR board plugged in, running `opencr_install_firmware` will install the firmware on the OpenCR board
+2. On the turtlebot, with the OpenCR board plugged in, running `opencr_install_numsr_firmware` will install the NUMSR firmware on the OpenCR board
+3. On the turtlebot, with the OpenCR board plugged in, running `opencr_install_robotis_firmware` will install the standard robotis firmware on the OpenCR board

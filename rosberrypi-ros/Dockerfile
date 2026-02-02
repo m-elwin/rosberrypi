@@ -100,7 +100,8 @@ RUN apt-get update \
        network-manager \
        ros-kilted-hls-lfcd-lds-driver \
        ros-kilted-turtlebot3-msgs \
-       ros-kilted-dynamixel-sdk
+       ros-kilted-dynamixel-sdk \
+       ros-kilted-catch-ros2
 
 RUN git clone -b jazzy \
        https://github.com/ROBOTIS-GIT/turtlebot3.git

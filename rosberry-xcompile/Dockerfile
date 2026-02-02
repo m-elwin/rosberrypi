@@ -1,13 +1,28 @@
 FROM ubuntu:noble AS ubuntu_amd64
+
 # Get a list of of all recursive dependencies from a working ubuntu system of the
 # amd64 utlities that we need to replace
 # The grep -v removes some malformed dependencies
+# This is a list of all the packages from x86 that we need to force installation of
 RUN apt-get update \
     && apt-get install -yq \
     apt-rdepends \
     && apt-rdepends \
-              gcc-14-aarch64-linux-gnu g++-14-aarch64-linux-gnu\
-              python3 python3-numpy lsb-release perm passwd coreutils bash dash gawk grep sed findutils | grep -v "^ "\
+              gcc-14-aarch64-linux-gnu \
+              g++-14-aarch64-linux-gnu \
+              python3 \
+              python3-numpy \
+              lsb-release \
+              perm \
+              passwd \
+              coreutils \
+              bash \
+              dash \
+              gawk \
+              grep \
+              sed  \
+              findutils \
+              | grep -v "^ "\
               | grep -v "^awk$" | grep -v "debconf-2.0" | grep -v dpkg | grep -v mime-support \
               | grep -v ".so.3" > /dependencies.txt
 
@@ -35,9 +50,7 @@ RUN dpkg --add-architecture amd64 \
            libapt-pkg6.0:amd64 \
            libseccomp2:amd64 \
            libsystemd0:amd64 \
-           make:amd64 \
-           libblas-dev:amd64 \
-           liblapack-dev:amd64
+           make:amd64
 
 # Download amd64 apt, and remove arm64 apt, then install amd64 apt
 # amd64 apt runs faster but it also by default downloads amd64 packages
